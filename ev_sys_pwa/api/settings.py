@@ -10,10 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import json
+import os
+import mimetypes
+from google.oauth2 import service_account
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,7 +30,7 @@ SECRET_KEY = 'django-insecure-6ftj+38_7u+x6t9%&2@8t4*&&ov#r-mh^8a#q%veuhc3+i-w-)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -67,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'evaluation_system.wsgi.application'
+WSGI_APPLICATION = 'api.wsgi.application'
 
 
 # Database
@@ -76,7 +81,7 @@ WSGI_APPLICATION = 'evaluation_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -116,10 +121,23 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, 'service.json')
+with open(SERVICE_ACCOUNT_FILE, "r") as f:
+    GS_PROJECT_ID = json.loads(f.read()).get("project_id")
 
-STATIC_URL = '/static/'
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE,
+)
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = f'{GS_PROJECT_ID}-evaluation-system-static'
+STATIC_URL = f"https://storage.googleapis.com/{GS_PROJECT_ID}-evaluation-system-static/"
+STATIC_ROOT = f"https://storage.googleapis.com/{GS_PROJECT_ID}-evaluation-system-static/"
+
+mimetypes.add_type("text/css", ".css", True)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
