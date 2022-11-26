@@ -15,7 +15,7 @@ resource "google_cloud_run_service" "cloud_run_evaluation_system" {
 data "google_iam_policy" "noauth" {
   binding {
     role = "roles/run.invoker"
-    members = var.evaluataion_system_members
+    members = var.evaluation_system_members
   }
 }
 
