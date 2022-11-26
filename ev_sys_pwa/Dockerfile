@@ -16,6 +16,5 @@ RUN apt-get update \
     && mkdir -p /var/log/nrgp
 
 WORKDIR ${PYTHONPATH}
-RUN ${PYTHONPATH}ev_sys_pwa/manage.py collectstatic --no-input
 
-CMD ["uwsgi","--ini","ev_sys_pwa/api/uwsgi.ini","--static-map","/static=collected_static"]
+CMD ["uwsgi","--ini","ev_sys_pwa/uwsgi.ini"]
