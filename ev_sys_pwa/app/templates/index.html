@@ -1,9 +1,30 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    </head>
-    <body>
-    <h1>index page.</h1>
-    </body>
-</html>
+{% extends "base.html" %}
 
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <form method="post" action='/'>
+            <div class="login">
+                <dl>
+                    <dt>ID</dt>
+                    <dd>
+                        <input type="text" name="id">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>Password</dt>
+                    <dd>
+                        <input type="password" name="pass">
+                    </dd>
+                </dl>
+                <dl>
+                    <dd>
+                        <button type="submit" value="Login">Login</button>
+                    </dd>
+                </dl>
+            </div>
+        </form>
+    </main>
+{% endblock %}

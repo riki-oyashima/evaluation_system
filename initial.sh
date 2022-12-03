@@ -64,4 +64,5 @@ create_bucket $proj $region terraform
 # API有効化
 api_available $proj run.googleapis.com
 api_available $proj cloudbuild.googleapis.com
+api_available $proj cloudkms.googleapis.com
 
