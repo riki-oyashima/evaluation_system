@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="row">
+            <div class="col align-self-start">
+                <p>{{id}}でログイン中</p>
+            </div>
+            <div class="col align-self-start text-right">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <table class="table table-hover table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th>メンバー</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td>
+                        <a href="current_evaluations?target_member={{ member }}">{{ member }}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+{% endblock %}

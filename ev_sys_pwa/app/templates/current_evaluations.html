@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="row">
+            <div class="col align-self-start">
+                <p>{{ id }}でログイン中</p>
+                <p>{{ message }}</p>
+            </div>
+            <div class="col align-self-start text-right">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <form class="form-upload" method="post" action="/update" id="update_evaluation">
+            <input type="hidden" name="target_member" value="{{ target_member }}">
+            <div class="tab-wrap">
+                {% for role in evaluations %}
+                    <input id="TAB-{{ role }}" type="radio" name="TAB" class="tab-switch" onclick="radioDeselection(this, '{{ role }}')"/>
+                    <label class="tab-label" for="TAB-{{ role }}">{{ role }}
+                        <span class="glyphicon glyphicon-question-sign modalicon" id="info"
+                        data-toggle="modal" data-target="#roleInfoModal-{{ role }}"></span>
+                    </label>
+                    <div class="tab-content">
+                        <table class="table table-hover table-sm">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>分類</th>
+                                <th>項目</th>
+                                <th>評価</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for section in evaluations[role] %}
+                                    <tr>
+                                        <td rowspan="{{ evaluations[role][section] | length }}">
+                                            {{ section }}
+                                        </td>
+                                        {% for element in evaluations[role][section] %}
+                                            <td>
+                                                {{ evaluations[role][section][element]["description"] }}
+                                            </td>
+                                            <td>
+                                                <input id="{{ element }}-2" type="radio" name="eval-{{ element }}" value="2"
+                                                {% if evaluations[role][section][element]["evaluation"] == 2 %}checked{% endif %}
+                                                {% if editable == false %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-2">優</label>
+                                                <input id="{{ element }}-1" type="radio" name="eval-{{ element }}" value="1"
+                                                {% if evaluations[role][section][element]["evaluation"] == 1 %}checked{% endif %}
+                                                {% if editable == false %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-1">可</label>
+                                                <input id="{{ element }}-0" type="radio" name="eval-{{ element }}" value="0"
+                                                {% if evaluations[role][section][element]["evaluation"] == 0 %}checked{% endif %}
+                                                {% if editable == false %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-0">不可</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- modal -->
+                    <div id="roleInfoModal-{{ role }}" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ role }}</h4>
+                                </div>
+                                <div id="modal-text" class="modal-body" style="white-space:pre-wrap; word-wrap:break-word;">
+                                    {{ role_descriptions[role] }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </form>
+    </main>
+    <footer>
+        <div class="foot-wrap">
+            <div class="row">
+                <div class="col align-self-start" {% if editable == false %}hidden{% endif %}>
+                    <button class="btn btn-outline-primary" type="submit" name="submit" value="upload" form="update_evaluation"
+                    >保存</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
