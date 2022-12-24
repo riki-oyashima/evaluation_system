@@ -15,6 +15,7 @@ class DatastoreKind(Enum):
     item_element = "ev_sys_evaluation_items_element"
     item_input_number = "ev_sys_evaluation_items_input_number"
     item_user = "ev_sys_evaluation_items_user"
+    target_item = "ev_sys_evaluation_target_item"
 
 
 class UserStatus(Enum):
@@ -145,3 +146,23 @@ class EvItemUser(DatastoreEntity):
         self.input_number = kwargs.get("input_number", self.input_number)
         self.element = kwargs.get("element", self.element)
         self.evaluation = kwargs.get("evaluation", self.evaluation)
+
+
+class EvTargetItem(DatastoreEntity):
+    __kind__ = DatastoreKind.target_item.value
+    input_number = EntityValue(None)
+    element = EntityValue(None)
+    detail = EntityValue(None)
+
+    def __init__(self, key=None, **kwargs):
+        super().__init__(**kwargs)
+        if key:
+            self.key = key
+            self.input_number = kwargs.get("input_number")
+            self.element = kwargs.get("element")
+            self.detail = kwargs.get("detail")
+
+    def set_parameters(self, **kwargs):
+        self.input_number = kwargs.get("input_number", self.input_number)
+        self.element = kwargs.get("element", self.element)
+        self.detail = kwargs.get("detail", self.detail)

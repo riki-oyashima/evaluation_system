@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from ev_sys_pwa.app.utils.database.data_class import DatastoreKind, User, Project,\
-    EvItemRole, EvItemSection, EvItemElement, EvItemInputNumber, EvItemUser, Authority
+    EvItemRole, EvItemSection, EvItemElement, EvItemInputNumber, EvItemUser, EvTargetItem
 
 
 def get_func(class_, key, value, new_instance=False):
@@ -177,3 +177,20 @@ def get_members():
     query = User().get_client().query(kind=DatastoreKind.user.value)
     query.add_filter("authority", "=", 30)
     return [User(x.key, **dict(x.items())) for x in query.fetch()]
+
+
+def create_ev_target_item(input_number, element_key, detail):
+    ev_target_item = EvTargetItem()
+    ev_target_item.set_parameters(input_number=input_number.key, element=element_key, detail=detail)
+    ev_target_item.save()
+
+
+def get_ev_target_item(input_number):
+    res = []
+    filters = [
+        ("input_number", "=", input_number.key),
+    ]
+    query = EvTargetItem().get_client().query(kind=DatastoreKind.target_item.value, filters=filters)
+    for data in query.fetch():
+        res.append(EvTargetItem(data.key, **dict(data.items())))
+    return res
