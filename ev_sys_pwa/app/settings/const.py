@@ -7,10 +7,12 @@ class Message:
     MEMBER_WAIT_MANAGER = "上司の評価を待ちましょう。"
     MEMBER_ONE_ON_ONE_INITIAL = "上司と評価の認識合わせをしましょう。"
     MANAGER_INIT = "{target_member}さんの評価をしましょう。"
+    MANAGER_ONE_ON_ONE_INITIAL = "{target_member}さんと認識合わせをしましょう。"
 
     MESSAGE_DICT = {
         Authority.Manager.value: {
             InputNumberStep.init.value: MANAGER_INIT,
+            InputNumberStep.manager_input.value: MANAGER_ONE_ON_ONE_INITIAL,
         },
         Authority.Member.value: {
             InputNumberStep.init.value: MEMBER_INIT,

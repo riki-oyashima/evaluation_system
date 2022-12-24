@@ -30,6 +30,10 @@
                                 <th>分類</th>
                                 <th>項目</th>
                                 <th>評価</th>
+                                {% if input_number == 2 %}
+                                <th>上司の評価</th>
+                                <th>最終評価</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -39,10 +43,14 @@
                                             {{ section }}
                                         </td>
                                         {% for element in evaluations[role][section] %}
-                                            <td>
+                                            <td
+                                                    {% if input_number == 2 %}{% if evaluations[role][section][element]["evaluation"] != evaluations[role][section][element]["evaluation_manager"] %}style="background: #ffff00"{% endif %}{% endif %}
+                                            >
                                                 {{ evaluations[role][section][element]["description"] }}
                                             </td>
-                                            <td>
+                                            <td
+                                                    {% if input_number == 2 %}{% if evaluations[role][section][element]["evaluation"] != evaluations[role][section][element]["evaluation_manager"] %}style="background: #ffff00"{% endif %}{% endif %}
+                                            >
                                                 <input id="{{ element }}-2" type="radio" name="eval-{{ element }}" value="2"
                                                 {% if evaluations[role][section][element]["evaluation"] == 2 %}checked{% endif %}
                                                 {% if editable == false %}disabled="disabled"{% endif %}
@@ -59,6 +67,44 @@
                                                 >
                                                 <label for="{{ element }}-0">不可</label>
                                             </td>
+                                            {% if input_number == 2 %}
+                                            <td
+                                                    {% if evaluations[role][section][element]["evaluation"] != evaluations[role][section][element]["evaluation_manager"] %}style="background: #ffff00"{% endif %}
+                                            >
+                                                <input id="{{ element }}-2-manager" type="radio" name="eval-{{ element }}-manager" value="2"
+                                                {% if evaluations[role][section][element]["evaluation_manager"] == 2 %}checked{% endif %}
+                                                {% if editable == false %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-2-manager">優</label>
+                                                <input id="{{ element }}-1-manager" type="radio" name="eval-{{ element }}-manager" value="1"
+                                                {% if evaluations[role][section][element]["evaluation_manager"] == 1 %}checked{% endif %}
+                                                {% if editable == false %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-1-manager">可</label>
+                                                <input id="{{ element }}-0-manager" type="radio" name="eval-{{ element }}-manager" value="0"
+                                                {% if evaluations[role][section][element]["evaluation_manager"] == 0 %}checked{% endif %}
+                                                {% if editable == false %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-0-manager">不可</label>
+                                            </td>
+                                            <td>
+                                                <input id="{{ element }}-2-confirm" type="radio" name="eval-{{ element }}-confirm" value="2"
+                                                {% if evaluations[role][section][element]["evaluation"] == 2 %}checked{% endif %}
+                                                {% if authority != 10 %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-2-confirm">優</label>
+                                                <input id="{{ element }}-1-confirm" type="radio" name="eval-{{ element }}-confirm" value="1"
+                                                {% if evaluations[role][section][element]["evaluation"] == 1 %}checked{% endif %}
+                                                {% if authority != 10 %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-1-confirm">可</label>
+                                                <input id="{{ element }}-0-confirm" type="radio" name="eval-{{ element }}-confirm" value="0"
+                                                {% if evaluations[role][section][element]["evaluation"] == 0 %}checked{% endif %}
+                                                {% if authority != 10 %}disabled="disabled"{% endif %}
+                                                >
+                                                <label for="{{ element }}-0-confirm">不可</label>
+                                            </td>
+                                            {% endif %}
                                         </tr>
                                         <tr>
                                         {% endfor %}
@@ -87,7 +133,7 @@
     <footer>
         <div class="foot-wrap">
             <div class="row">
-                <div class="col align-self-start" {% if editable == false %}hidden{% endif %}>
+                <div class="col align-self-start" {% if updatable == false %}hidden{% endif %}>
                     <button class="btn btn-outline-primary" type="submit" name="submit" value="upload" form="update_evaluation"
                     >保存</button>
                 </div>
